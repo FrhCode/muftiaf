@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/sites-available/default
+    ports:
+      - "8020:80"
+    command: bash -c
+      "
+      chmod 777 start.sh &&
+      dos2unix start.sh  &&
+      ./start.sh
+      "
+
+  db:
+    image: mysql:8.0.33
+    restart: always
+    env_file: .env
+    volumes:
+      - ./mufti.sql:/docker-entrypoint-initdb.d/laravel.sql
